@@ -38,3 +38,14 @@ La aplicación deberá cumplir con requisitos de **responsive design**, **UX**, 
 
 API utilizada:
 https://fakestoreapi.com/
+
+## 📌 Datos de importancia
+
+Las credenciales de Fake Store API no se encuentran en funcionamiento. Luego de buscar en internet, encontre unas credenciales que se pueden utilizar (lo vi en github):
+- Usuario: mor_2314
+- Contraseña: 83r5^_
+
+Igualmente, se agrega un apartado de Q&A en el login con las credenciales par autilizar.
+ 
+https://github.com/keikaavousi/fake-store-api/issues/131
+
