@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 let listadoProductos = document.querySelector("#listado-productos");
+let productosSeleccionado = null;
 
 function getAllProductos() {
   return fetch("https://fakestoreapi.com/products").then((response) =>
@@ -36,9 +37,9 @@ getAllProductos()
                   ⭐ ${producto.rating.rate} (${producto.rating.count})
                 </div>
 
-                <button class="btn btn-primary w-100" onclick="event.stopPropagation()">
-                  <i class="bi bi-cart-plus"></i> Agregar
-                </button>
+                <button class="btn btn-primary w-100" onclick="event.stopPropagation();">
+                <i class="bi bi-cart-plus"></i> Agregar
+            </button>
               </div>
 
             </div>
@@ -63,6 +64,8 @@ cards.forEach((card, index) => {
   });
 
   function openProductModal(producto) {
+    productosSeleccionado=producto;
+
     document.getElementById("modal-title").innerText = producto.title;
     document.getElementById("modal-price").innerText = "$" + producto.price;
     document.getElementById("modal-description").innerText = producto.description;
@@ -75,6 +78,28 @@ function closeProductModal() {
     document.getElementById("productModal").style.display = "none";
 }
 
+
 function addToCartAndClose() {
+  
+  if (!productosSeleccionado) return;
+  
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+ 
+
+  carrito.push(productosSeleccionado);
+
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+
+  console.log(JSON.parse(localStorage.getItem("carrito")));
+  
+  Swal.fire({
+    position: "top-end",
+    icon: "success",
+    title: "El producto se agregó al carrito",
+    showConfirmButton: false,
+    timer: 2000,
+    toast: true
+  });
+
     closeProductModal();
 }
