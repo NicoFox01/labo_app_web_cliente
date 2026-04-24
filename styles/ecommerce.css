@@ -6,19 +6,21 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(to bottom, #f4f5f7 0%, #ffffff 20%, #f6f6f6 100%);
+    background: var(--bs-body-bg);
     min-height: 100vh;
-    color: #222;
+    color: var(--bs-body-color);
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* ENCABEZADO */
 .topbar {
-    background-color: #ffffff;
+    background-color: var(--bs-body-bg);
     padding: 22px 0;
     box-shadow: 0 3px 18px rgba(0, 0, 0, 0.06);
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .topbar-content {
@@ -46,13 +48,25 @@ body {
 .search-input {
     width: 100%;
     height: 62px;
-    border: 1px solid #d8d8d8;
+    border: 1px solid var(--bs-border-color);
     border-radius: 40px;
     padding: 0 78px 0 28px;
     font-size: 1.15rem;
     outline: none;
-    background-color: #fff;
+    background-color: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.search-input::placeholder {
+    color: var(--bs-secondary-color);
+    opacity: 1;
+}
+
+.search-input:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
 .search-btn {
@@ -70,6 +84,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* BOTON THEME */
+.theme-toggle {
+    border-radius: 10px;
+    transition: all 0.25s ease;
 }
 
 /* CARRITO */
@@ -114,9 +134,11 @@ body {
 
 .card {
     border-radius: 12px;
-    border: 1px solid #dcdcdc;
+    border: 1px solid var(--bs-border-color);
+    background-color: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    transition: transform .2s ease;
+    transition: transform .2s ease, background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .card:hover {
@@ -133,13 +155,14 @@ body {
 .footer {
     text-align: center;
     padding: 14px;
-    background-color: #f8f8f8;
-    border-top: 1px solid #dadada;
-    color: #666;
+    background-color: var(--bs-tertiary-bg);
+    border-top: 1px solid var(--bs-border-color);
+    color: var(--bs-secondary-color);
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 /* =========================================
-   MODAL ACTUALIZADO 
+   MODAL ACTUALIZADO
    ========================================= */
 
 .product-modal {
@@ -156,16 +179,18 @@ body {
 }
 
 .product-modal-content {
-    background-color: #ffffff;
-    width: 800px; /* Ancho ajustado para acomodar las dos columnas */
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    width: 800px;
     max-width: 95%;
     padding: 30px;
     border-radius: 16px;
     position: relative;
-    border: 1px solid #e5e5e5;
+    border: 1px solid var(--bs-border-color);
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     transform: scale(0.9);
     animation: scaleIn 0.25s ease forwards;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .product-close {
@@ -174,14 +199,14 @@ body {
     right: 20px;
     font-size: 28px;
     cursor: pointer;
-    color: #555;
+    color: var(--bs-secondary-color);
 }
 
 /* ENCABEZADO DEL MODAL (Título) */
 .modal-header-custom {
     text-align: center;
     margin-bottom: 20px;
-    padding-right: 20px; /* Para que el texto no se pise con la cruz de cerrar */
+    padding-right: 20px;
 }
 
 .product-title-top {
@@ -192,13 +217,13 @@ body {
 
 .title-divider {
     border: none;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--bs-border-color);
 }
 
 /* GRILLA PRINCIPAL (Cuerpo del modal) */
 .product-modal-body-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Divide el contenedor en dos mitades iguales */
+    grid-template-columns: 1fr 1fr;
     gap: 30px;
     align-items: stretch;
 }
@@ -208,9 +233,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #eee;
+    border: 1px solid var(--bs-border-color);
     padding: 15px;
     border-radius: 8px;
+    background-color: var(--bs-tertiary-bg);
 }
 
 .product-image-box img {
@@ -223,22 +249,23 @@ body {
 .product-details-box {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Empuja los elementos a los extremos (arriba y abajo) */
+    justify-content: space-between;
     gap: 15px;
 }
 
 .product-description-container {
-    border: 1px solid #eee;
+    border: 1px solid var(--bs-border-color);
     padding: 15px;
     border-radius: 8px;
-    flex-grow: 1; /* Hace que este contenedor ocupe el espacio sobrante */
+    flex-grow: 1;
     overflow-y: auto;
-    max-height: 150px; /* Añade scroll si la descripción de FakeStore es muy larga */
+    max-height: 150px;
+    background-color: var(--bs-tertiary-bg);
 }
 
 .product-description {
     font-size: 0.85rem;
-    color: #555;
+    color: var(--bs-secondary-color);
     line-height: 1.6;
     text-align: justify;
 }
@@ -250,8 +277,9 @@ body {
     gap: 15px;
 }
 
-.price-box, .qty-box {
-    border: 1px solid #eee;
+.price-box,
+.qty-box {
+    border: 1px solid var(--bs-border-color);
     padding: 15px;
     border-radius: 8px;
     display: flex;
@@ -259,21 +287,22 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    background-color: var(--bs-tertiary-bg);
 }
 
 .price-label {
     font-size: 0.8rem;
-    color: #777;
+    color: var(--bs-secondary-color);
 }
 
 .price-value {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #222;
+    color: var(--bs-body-color);
 }
 
 .total-price {
-    color: #115d96; /* Color primario de la marca para destacar el total */
+    color: #115d96;
 }
 
 .qty-box label {
@@ -286,9 +315,11 @@ body {
     width: 70px;
     padding: 8px;
     text-align: center;
-    border: 1px solid #ccc;
+    border: 1px solid var(--bs-border-color);
     border-radius: 4px;
     font-size: 1rem;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
 }
 
 /* BOTÓN AGREGAR */
@@ -323,11 +354,12 @@ body {
     }
 }
 
-/* RESPONSIVE: Adaptación para pantallas de celulares */
+/* RESPONSIVE */
 @media (max-width: 768px) {
     .product-modal-body-grid {
-        grid-template-columns: 1fr; /* Pasa de 2 columnas a 1 columna apilada */
+        grid-template-columns: 1fr;
     }
+
     .product-image-box img {
         max-height: 200px;
     }
