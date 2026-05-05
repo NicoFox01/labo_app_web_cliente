@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     btnVaciar.addEventListener("click", vaciarCarrito);
   }
 });
+//variable global donde se almacenan todos los productos (facu)
+let productosGlobal= []; 
 
 let listadoProductos = document.querySelector("#listado-productos");
 
@@ -25,53 +27,69 @@ function getAllProductos() {
 function cargarProductos() {
   getAllProductos()
     .then((productos) => {
-      listadoProductos.innerHTML = "";
-
-      productos.forEach((producto, index) => {
-        const col = document.createElement("div");
-        col.className = "col";
-
-        col.innerHTML = `
-          <div class="card h-100 product-card">
-            <img src="${producto.image}" class="card-img-top" style="height:200px; object-fit:contain;" />
-
-            <div class="card-body d-flex flex-column">
-
-              <h5 class="card-title text-truncate">
-                ${producto.title}
-              </h5>
-
-              <div class="mt-auto">
-
-                <h6 class="fw-bold">$${producto.price}</h6>
-
-                <div class="text-warning mb-2">
-                  ⭐ ${producto.rating.rate} (${producto.rating.count})
-                </div>
-
-                <div style="display:flex; width:100%; align-items:center;">
-
-                  <div style="width:12.5%"></div>
-
-                  <button class="btn btn-primary btn-detalle" style="width:35%;">
-                    <i class="bi bi-eye me-1"></i> Más Detalles
-                  </button>
-
-                  <div style="width:5%"></div>
-
-                  <button class="btn btn-success btn-add" style="width:35%;">
-                    <i class="bi bi-cart-plus me-1"></i> Agregar al Carrito
-                  </button>
-
-                  <div style="width:12.5%"></div>
-
-                </div>
-
+    //Se guardan los productos en la variable global para reutilizarlos luego en el buscador
+      productosGlobal=productos; 
+      
+      renderProductos(productos);
+    })
+    .catch((err)=> {
+      listadoProductos.innerHTML = "<p>Error cargando productos</p>";
+      console.error(err);
+    });
+  } 
+  //se agrega para que renderize los productos en pantalla y permite mostrar tanto la lista completa como resultados filtrados
+  function renderProductos(productos) {
+    listadoProductos.innerHTML = "";
+  
+    productos.forEach((producto) => {
+  
+      const col = document.createElement("div");
+      col.className = "col";
+  
+      col.innerHTML = `
+        <div class="card h-100 product-card">
+          <img src="${producto.image}" class="card-img-top" style="height:200px; object-fit:contain;" />
+  
+          <div class="card-body d-flex flex-column">
+  
+            <h5 class="card-title text-truncate">
+              ${producto.title}
+            </h5>
+  
+            <p class="card-text">
+              ${producto.description.substring(0, 80)}...
+            </p>
+  
+            <div class="mt-auto">
+              <h6 class="fw-bold">$${producto.price}</h6>
+  
+              <div class="text-warning mb-2">
+                ⭐ ${producto.rating.rate} (${producto.rating.count})
               </div>
+  
+              <div style="display:flex; width:100%; align-items:center;">
+  
+                <div style="width:12.5%"></div>
+  
+                <button class="btn btn-primary btn-detalle" style="width:35%;">
+                  <i class="bi bi-eye me-1"></i> Más Detalles
+                </button>
+  
+                <div style="width:5%"></div>
+  
+                <button class="btn btn-success btn-add" style="width:35%;">
+                  <i class="bi bi-cart-plus me-1"></i> Agregar al Carrito
+                </button>
+  
+                <div style="width:12.5%"></div>
+  
+              </div>
+  
             </div>
           </div>
-        `;
-
+        </div>
+      `;
+      
         listadoProductos.appendChild(col);
 
         const btnDetalle = col.querySelector(".btn-detalle");
@@ -84,12 +102,24 @@ function cargarProductos() {
         btnAdd.addEventListener("click", () => {
           addToCart(producto, 1);
         });
+
       });
-    })
-    .catch((err) => {
-      listadoProductos.innerHTML = "<p>Error cargando productos</p>";
-      console.error(err);
-    });
+}
+
+//BUSCADOR (NUEVO)
+const buscador = document.getElementById("buscador");
+
+if (buscador) {
+  buscador.addEventListener("input", () => {
+    const texto = buscador.value.toLowerCase(); //se obtiene el texto y se transforma en minuscula 
+
+    //se filtran los productos comparando el texto ingresado con el titulo
+    const filtrados = productosGlobal.filter((producto) =>
+      producto.title.toLowerCase().includes(texto) 
+    );
+
+    renderProductos(filtrados);
+  });
 }
 
 //Modal detalle del producto
