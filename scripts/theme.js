@@ -2,6 +2,7 @@
   const savedTheme = localStorage.getItem("theme") || "light";
   document.documentElement.setAttribute("data-bs-theme", savedTheme);
   updateThemeIcons(savedTheme);
+  updateLogo(savedTheme);
 })();
 
 function toggleTheme() {
@@ -12,6 +13,7 @@ function toggleTheme() {
   html.setAttribute("data-bs-theme", newTheme);
   localStorage.setItem("theme", newTheme);
   updateThemeIcons(newTheme);
+  updateLogo(newTheme);
 }
 
 function updateThemeIcons(theme) {
@@ -20,4 +22,11 @@ function updateThemeIcons(theme) {
   themeButtons.forEach((icon) => {
     icon.className = theme === "dark" ? "bi bi-sun-fill" : "bi bi-moon-fill";
   });
+}
+
+function updateLogo(theme) {
+  const logo = document.querySelector(".logo-img, #logo");
+  if (logo) {
+    logo.src = theme === "dark" ? "images/logo_istea_nocturno.png" : "images/istea_logo.png";
+  }
 }

@@ -1,3 +1,12 @@
+/* =========================================
+   RESET Y VARIABLES
+   ========================================= */
+:root {
+    --visa-color: #1a1f71;
+    --mastercard-color: #eb001b;
+    --default-color: #115d96;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -12,136 +21,113 @@ body {
     transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* ENCABEZADO */
+/* =========================================
+   ENCABEZADO (TOPBAR)
+   ========================================= */
 .topbar {
     background-color: var(--bs-body-bg);
-    padding: 22px 0;
+    padding: 12px 0;
     box-shadow: 0 3px 18px rgba(0, 0, 0, 0.06);
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-.topbar-content {
-    gap: 20px;
+[data-bs-theme="dark"] .topbar {
+    background-color: #27282C;
 }
 
 .logo-img {
-    height: 150px;
+    height: 86px;
     object-fit: contain;
+    background-color: transparent;
 }
 
 .brand {
-    display: flex;
-    align-items: center;
+    flex-shrink: 0;
 }
 
-/* BARRA DE BUSQUEDA */
 .search-wrapper {
     position: relative;
     width: 100%;
-    max-width: 560px;
+    max-width: 350px;
     margin: 0 auto;
+    flex-grow: 1;
 }
 
 .search-input {
     width: 100%;
-    height: 62px;
+    height: 40px;
     border: 1px solid var(--bs-border-color);
     border-radius: 40px;
-    padding: 0 78px 0 28px;
-    font-size: 1.15rem;
-    outline: none;
+    padding: 0 50px 0 18px;
     background-color: var(--bs-tertiary-bg);
     color: var(--bs-body-color);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
-}
-
-.search-input::placeholder {
-    color: var(--bs-secondary-color);
-    opacity: 1;
-}
-
-.search-input:focus {
-    border-color: var(--bs-primary);
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    font-size: 0.9rem;
 }
 
 .search-btn {
     position: absolute;
-    right: 8px;
+    right: 4px;
     top: 50%;
     transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
+    width: 32px;
+    height: 32px;
     border: none;
     border-radius: 50%;
     background-color: #115d96;
     color: white;
-    font-size: 1.3rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.9rem;
 }
 
-/* BOTON THEME */
-.theme-toggle {
-    border-radius: 10px;
-    transition: all 0.25s ease;
-}
-
-/* CARRITO */
 .cart-wrapper {
     position: relative;
-    min-width: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .cart-icon {
-    font-size: 2.4rem;
+    font-size: 1.5rem;
     color: #115d96;
-    cursor: pointer;
 }
 
 .cart-badge {
     position: absolute;
-    top: -4px;
-    right: 6px;
-    width: 24px;
-    height: 24px;
-    background-color: #115d96;
+    top: -8px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background-color: #dc3545;
     color: #fff;
     border-radius: 50%;
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.card-body {
-    text-align: center;
-}
-
-/* PRODUCTOS */
+/* =========================================
+   PRODUCTOS (GRILLA)
+   ========================================= */
 .products-section {
     padding: 36px 40px;
 }
 
-.card {
+/* Estilo para las cards de productos (no las de pago) */
+#listado-productos .card {
     border-radius: 12px;
     border: 1px solid var(--bs-border-color);
     background-color: var(--bs-tertiary-bg);
     color: var(--bs-body-color);
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    transition: transform .2s ease, background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    transition: transform .2s ease;
 }
 
-.card:hover {
+#listado-productos .card:hover {
     transform: translateY(-4px);
 }
 
@@ -151,46 +137,46 @@ body {
     padding: 20px;
 }
 
-/* PIE DE PAGINA */
 .footer {
     text-align: center;
     padding: 14px;
     background-color: var(--bs-tertiary-bg);
-    border-top: 1px solid var(--bs-border-color);
     color: var(--bs-secondary-color);
-    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 /* =========================================
-   MODAL ACTUALIZADO
+   MODALES (GENERAL)
    ========================================= */
-
 .product-modal {
     position: fixed;
     inset: 0;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(6px);
     z-index: 2000;
     opacity: 0;
+}
+
+.product-modal.active {
+    display: flex;
     animation: fadeIn 0.25s ease forwards;
 }
 
 .product-modal-content {
     background-color: var(--bs-body-bg);
     color: var(--bs-body-color);
-    width: 800px;
-    max-width: 95%;
     padding: 30px;
     border-radius: 16px;
     position: relative;
     border: 1px solid var(--bs-border-color);
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     transform: scale(0.9);
+}
+
+.product-modal.active .product-modal-content {
     animation: scaleIn 0.25s ease forwards;
-    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .product-close {
@@ -200,167 +186,188 @@ body {
     font-size: 28px;
     cursor: pointer;
     color: var(--bs-secondary-color);
+    z-index: 100;
 }
 
-/* ENCABEZADO DEL MODAL (Título) */
-.modal-header-custom {
-    text-align: center;
+/* =========================================
+   MODAL DE PAGO (SOLUCIÓN A LA IMAGEN)
+   ========================================= */
+
+#checkout-modal .product-modal-content {
+    width: 450px;
+    padding: 25px;
+    overflow: visible; /* Permitir que la tarjeta "flote" */
+}
+
+/* Forzamos que la tarjeta visual se vea */
+#checkout-modal .card-wrapper {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    perspective: 1000px;
     margin-bottom: 20px;
-    padding-right: 20px;
+    z-index: 10;
 }
 
-.product-title-top {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 10px;
+/* Estilos exclusivos para la tarjeta de pago, evitando conflicto con cards de productos */
+#checkout-modal .card {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
-.title-divider {
-    border: none;
-    border-top: 1px solid var(--bs-border-color);
+#checkout-modal .card.flipped {
+    transform: rotateY(180deg);
 }
 
-/* GRILLA PRINCIPAL (Cuerpo del modal) */
-.product-modal-body-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    align-items: stretch;
+#checkout-modal .card-front,
+#checkout-modal .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    padding: 25px;
+    color: white !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
 }
 
-/* COLUMNA IZQUIERDA (Foto) */
-.product-image-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid var(--bs-border-color);
-    padding: 15px;
-    border-radius: 8px;
-    background-color: var(--bs-tertiary-bg);
-}
-
-.product-image-box img {
-    max-width: 100%;
-    max-height: 300px;
-    object-fit: contain;
-}
-
-/* COLUMNA DERECHA (Detalles) */
-.product-details-box {
+#checkout-modal .card-front {
+    background: linear-gradient(135deg, #115d96 0%, #1f5f97 100%) !important;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 15px;
 }
 
-.product-description-container {
-    border: 1px solid var(--bs-border-color);
-    padding: 15px;
-    border-radius: 8px;
-    flex-grow: 1;
-    overflow-y: auto;
-    max-height: 150px;
-    background-color: var(--bs-tertiary-bg);
+#checkout-modal .card-back {
+    background: linear-gradient(135deg, #2c3e50 0%, #000000 100%) !important;
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
 }
 
-.product-description {
+/* Elementos internos de la tarjeta */
+#checkout-modal .card-bank-name {
     font-size: 0.85rem;
-    color: var(--bs-secondary-color);
-    line-height: 1.6;
-    text-align: justify;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* FILA PRECIO Y CANTIDAD */
-.price-qty-row {
+#checkout-modal .card-number {
+    font-size: 1.45rem;
+    letter-spacing: 3px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    margin: 20px 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+#checkout-modal .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 2px;
+}
+
+#checkout-modal .value {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+#checkout-modal .card-magnetic-strip {
+    width: 100%;
+    height: 45px;
+    background: #111;
+    margin-bottom: 25px;
+}
+
+#checkout-modal .card-cvv {
+    background: #fff;
+    color: #333;
+    width: 80%;
+    height: 38px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 15px;
+    border-radius: 4px;
+}
+
+/* FORMULARIO DE PAGO */
+#checkout-modal .card-form {
+    background: var(--bs-body-bg);
+    padding: 90px 20px 20px 20px;
+    margin-top: -85px; 
+    border-radius: 12px;
+    border: 1px solid var(--bs-border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#checkout-modal .form-group label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--bs-secondary-color);
+    margin-bottom: 6px;
+}
+
+#checkout-modal .form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--bs-border-color);
+    background: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
+    font-size: 0.95rem;
+}
+
+#checkout-modal .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
 }
 
-.price-box,
-.qty-box {
-    border: 1px solid var(--bs-border-color);
-    padding: 15px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: var(--bs-tertiary-bg);
-}
-
-.price-label {
-    font-size: 0.8rem;
-    color: var(--bs-secondary-color);
-}
-
-.price-value {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--bs-body-color);
-}
-
-.total-price {
-    color: #115d96;
-}
-
-.qty-box label {
-    font-size: 0.85rem;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.qty-input {
-    width: 70px;
-    padding: 8px;
-    text-align: center;
-    border: 1px solid var(--bs-border-color);
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: var(--bs-body-bg);
-    color: var(--bs-body-color);
-}
-
-/* BOTÓN AGREGAR */
-.product-modal-btn {
-    padding: 14px;
-    background: linear-gradient(135deg, #1f5f97, #115d96);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+#checkout-modal #btn-confirmar-pago {
     width: 100%;
-    font-size: 1.1rem;
+    padding: 14px;
+    background: linear-gradient(135deg, #115d96, #0b3d63);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
     font-weight: bold;
-    text-transform: uppercase;
-    transition: opacity 0.2s;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 4px 10px rgba(17, 93, 150, 0.3);
 }
 
-.product-modal-btn:hover {
-    opacity: 0.9;
-}
-
-/* ANIMACIONES */
+/* =========================================
+   ANIMACIONES
+   ========================================= */
 @keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
+    to { opacity: 1; }
 }
 
 @keyframes scaleIn {
-    to {
-        transform: scale(1);
-    }
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
 
-/* RESPONSIVE */
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
-    .product-modal-body-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .product-image-box img {
-        max-height: 200px;
-    }
+    .products-section { padding: 20px; }
+    #checkout-modal .product-modal-content { width: 95%; padding: 15px; }
+    #checkout-modal .card-number { font-size: 1.2rem; }
 }
