@@ -49,3 +49,11 @@ Igualmente, se agrega un apartado de Q&A en el login con las credenciales par au
  
 https://github.com/keikaavousi/fake-store-api/issues/131
 
+
+Para limpieza de carrito, implementamos animación de "completar TC" (para terminar el pago) del repositorio:
+https://codepen.io/VlasovDevCore/pen/YPPryQQ
+
+Se customizó para el ejercicio.
+
+
+
