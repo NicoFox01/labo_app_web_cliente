@@ -1,3 +1,9 @@
+// Configuración global de SweetAlert2 para que aparezca adelante de todo
+// z-index alto para asegurar que los modales de SweetAlert2 se muestren por encima de otros elementos, como el carrito o el modal de pago.
+const style = document.createElement('style');
+style.textContent = `.swal2-container { z-index: 9999 !important; }`;
+document.head.appendChild(style);
+
 // Validación del token de FakeStoreAPI para acceder a la pantalla de ecommerce.html
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
@@ -8,11 +14,17 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarProductos();
   renderizarCarrito();
 
+  configurarFinalizarCompra();
+  inicializarEventosTarjeta();
+  procesarPagoFinal();
+
   const btnVaciar = document.querySelector("#btn-vaciar-carrito");
   if (btnVaciar) {
     btnVaciar.addEventListener("click", vaciarCarrito);
   }
 });
+//variable global donde se almacenan todos los productos (facu)
+let productosGlobal= []; 
 
 let listadoProductos = document.querySelector("#listado-productos");
 
@@ -25,53 +37,69 @@ function getAllProductos() {
 function cargarProductos() {
   getAllProductos()
     .then((productos) => {
-      listadoProductos.innerHTML = "";
-
-      productos.forEach((producto, index) => {
-        const col = document.createElement("div");
-        col.className = "col";
-
-        col.innerHTML = `
-          <div class="card h-100 product-card">
-            <img src="${producto.image}" class="card-img-top" style="height:200px; object-fit:contain;" />
-
-            <div class="card-body d-flex flex-column">
-
-              <h5 class="card-title text-truncate">
-                ${producto.title}
-              </h5>
-
-              <div class="mt-auto">
-
-                <h6 class="fw-bold">$${producto.price}</h6>
-
-                <div class="text-warning mb-2">
-                  ⭐ ${producto.rating.rate} (${producto.rating.count})
-                </div>
-
-                <div style="display:flex; width:100%; align-items:center;">
-
-                  <div style="width:12.5%"></div>
-
-                  <button class="btn btn-primary btn-detalle" style="width:35%;">
-                    <i class="bi bi-eye me-1"></i> Más Detalles
-                  </button>
-
-                  <div style="width:5%"></div>
-
-                  <button class="btn btn-success btn-add" style="width:35%;">
-                    <i class="bi bi-cart-plus me-1"></i> Agregar al Carrito
-                  </button>
-
-                  <div style="width:12.5%"></div>
-
-                </div>
-
+    //Se guardan los productos en la variable global para reutilizarlos luego en el buscador
+      productosGlobal=productos; 
+      
+      renderProductos(productos);
+    })
+    .catch((err)=> {
+      listadoProductos.innerHTML = "<p>Error cargando productos</p>";
+      console.error(err);
+    });
+  } 
+  //se agrega para que renderize los productos en pantalla y permite mostrar tanto la lista completa como resultados filtrados
+  function renderProductos(productos) {
+    listadoProductos.innerHTML = "";
+  
+    productos.forEach((producto) => {
+  
+      const col = document.createElement("div");
+      col.className = "col";
+  
+      col.innerHTML = `
+        <div class="card h-100 product-card">
+          <img src="${producto.image}" class="card-img-top" style="height:200px; object-fit:contain;" />
+  
+          <div class="card-body d-flex flex-column">
+  
+            <h5 class="card-title text-truncate">
+              ${producto.title}
+            </h5>
+  
+            <p class="card-text">
+              ${producto.description.substring(0, 80)}...
+            </p>
+  
+            <div class="mt-auto">
+              <h6 class="fw-bold">$${producto.price}</h6>
+  
+              <div class="text-warning mb-2">
+                ⭐ ${producto.rating.rate} (${producto.rating.count})
               </div>
+  
+              <div style="display:flex; width:100%; align-items:center;">
+  
+                <div style="width:12.5%"></div>
+  
+                <button class="btn btn-primary btn-detalle" style="width:35%;">
+                  <i class="bi bi-eye me-1"></i> Más Detalles
+                </button>
+  
+                <div style="width:5%"></div>
+  
+                <button class="btn btn-success btn-add" style="width:35%;">
+                  <i class="bi bi-cart-plus me-1"></i> Agregar al Carrito
+                </button>
+  
+                <div style="width:12.5%"></div>
+  
+              </div>
+  
             </div>
           </div>
-        `;
-
+        </div>
+      `;
+      
         listadoProductos.appendChild(col);
 
         const btnDetalle = col.querySelector(".btn-detalle");
@@ -84,12 +112,24 @@ function cargarProductos() {
         btnAdd.addEventListener("click", () => {
           addToCart(producto, 1);
         });
+
       });
-    })
-    .catch((err) => {
-      listadoProductos.innerHTML = "<p>Error cargando productos</p>";
-      console.error(err);
-    });
+}
+
+//BUSCADOR (NUEVO)
+const buscador = document.getElementById("buscador");
+
+if (buscador) {
+  buscador.addEventListener("input", () => {
+    const texto = buscador.value.toLowerCase(); //se obtiene el texto y se transforma en minuscula 
+
+    //se filtran los productos comparando el texto ingresado con el titulo
+    const filtrados = productosGlobal.filter((producto) =>
+      producto.title.toLowerCase().includes(texto) 
+    );
+
+    renderProductos(filtrados);
+  });
 }
 
 //Modal detalle del producto
@@ -244,14 +284,24 @@ actualizarBadge();
 function renderizarCarrito() {
   let offcanvasbody = document.querySelector("#cart-aside");
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    if (carrito.length === 0) {
+  
+  const btnVaciar = document.querySelector("#btn-vaciar-carrito");
+  const btnFinalizar = document.querySelector(".btn-dark");
+  
+  if (carrito.length === 0) {
     offcanvasbody.innerHTML = `
       <div class="text-center py-5">
         <i class="bi bi-cart-x" style="font-size: 2rem; opacity: 0.5;"></i>
         <p class="mt-3 mb-0">Carrito sin productos guardados</p>
       </div>
     `;
+    
+    if (btnVaciar) btnVaciar.disabled = true;
+    if (btnFinalizar) btnFinalizar.disabled = true;
     return;
+  } else {
+    if (btnVaciar) btnVaciar.disabled = false;
+    if (btnFinalizar) btnFinalizar.disabled = false;
   }
   let template = "";
   let total = carrito.reduce((acc, producto) => {
@@ -411,4 +461,122 @@ function vaciarCarrito() {
       });
     }
   });
+}
+
+// Modal de Pago
+function configurarFinalizarCompra() {
+    const btnFinalizar = document.querySelector(".btn-dark");
+    const modalPago = document.getElementById("checkout-modal");
+    const btnCerrar = document.getElementById("close-checkout");
+
+    if (btnFinalizar) {
+        btnFinalizar.onclick = () => {
+            const offcanvasElement = document.getElementById('cartOffcanvas');
+            const instance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+            if (instance) instance.hide();
+            modalPago.style.display = "flex";
+            setTimeout(() => modalPago.classList.add("active"), 10);
+        };
+    }
+    if (btnCerrar) {
+        btnCerrar.onclick = () => {
+            modalPago.classList.remove("active");
+            setTimeout(() => modalPago.style.display = "none", 300);
+        };
+    }
+}
+
+// Animación TC
+function inicializarEventosTarjeta() {
+    const cardVisual = document.getElementById('card');
+    const form = document.getElementById('payment-form');
+    const inputs = {
+        'card-number': 'display-card-number',
+        'card-holder': 'display-card-holder',
+        'card-expiry': 'display-card-expiry',
+        'card-cvv': 'display-card-cvv'
+    };
+
+    Object.keys(inputs).forEach(id => {
+        const inputEl = document.getElementById(id);
+        const displayEl = document.getElementById(inputs[id]);
+
+        inputEl?.addEventListener('input', (e) => {
+            let value = e.target.value;
+            if (id === 'card-holder') value = value.toUpperCase();
+            if (id === 'card-cvv') value = value.replace(/./g, '•');
+
+            displayEl.textContent = value || displayEl.dataset.placeholder || '';
+        });
+    });
+
+    // Efecto de giro para el CVV
+    const cvvInput = document.getElementById('card-cvv');
+    cvvInput?.addEventListener('focus', () => cardVisual.classList.add('flipped'));
+    cvvInput?.addEventListener('blur', () => cardVisual.classList.remove('flipped'));
+}
+
+// procesamiento de pago y limpieza del carrito
+function procesarPagoFinal() {
+    const paymentForm = document.getElementById('payment-form');
+    if (!paymentForm) return;
+
+    paymentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const nroTarjeta = document.getElementById('card-number').value.trim();
+        const titular = document.getElementById('card-holder').value.trim();
+        const vencimiento = document.getElementById('card-expiry').value.trim();
+        const cvv = document.getElementById('card-cvv').value.trim();
+
+        if (!nroTarjeta || !titular || !vencimiento || !cvv) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Datos incompletos',
+                text: 'Por favor, completá todos los campos de la tarjeta.',
+                confirmButtonColor: '#d33'
+            });
+            return;
+        }
+
+        const modalPago = document.getElementById("checkout-modal");
+        modalPago.classList.remove("active");
+        
+        // Simulación de procesamiento de pago con delay
+        setTimeout(() => {
+            modalPago.style.display = "none";
+
+            Swal.fire({
+                title: 'Procesando Pago',
+                text: 'Verificando con la entidad bancaria...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => { Swal.showLoading(); }
+            });
+
+            setTimeout(() => {
+                localStorage.removeItem("carrito");
+                actualizarBadge();
+                renderizarCarrito();
+                paymentForm.reset();
+
+                document.getElementById('display-card-number').textContent = '•••• •••• •••• ••••';
+                document.getElementById('display-card-holder').textContent = 'NOMBRE COMPLETO';
+                document.getElementById('display-card-expiry').textContent = 'MM/AA';
+                document.getElementById('display-card-cvv').textContent = '';
+
+                Swal.fire({
+                    position: "top-start",
+                    icon: "success",
+                    title: "¡Compra Exitosa!",
+                    text: "El pago se acreditó correctamente.",
+                    toast: true,
+                    showConfirmButton: false,
+                    timer: 4000,
+                    background: "#d4edda",
+                    color: "#155724"
+                });
+            }, 2000);
+        }, 300);
+    });
 }

@@ -38,8 +38,13 @@ body {
     transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+[data-bs-theme="dark"] .login-container {
+    background-color: #27282C;
+}
+
 #logo {
     width: 200px;
+    background-color: transparent;
 }
 
 /* FORM */
