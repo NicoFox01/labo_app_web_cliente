@@ -10,8 +10,8 @@ const errorMsg = document.getElementById("login-error");
 errorMsg.style.display = "none";
 
 const myHeaders = new Headers();
-
 myHeaders.append("Content-Type", "application/json");
+
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("form").addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -44,4 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
       errorMsg.style.display = "block";
     }
   });
+});
+
+window.addEventListener("click", (event) => {
+  const modal = document.getElementById("modal");
+  // Comprobamos si el clic fue exactamente en el contenedor principal del modal
+  if (event.target === modal) {
+    closeModal();
+  }
 });
