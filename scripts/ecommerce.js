@@ -15,8 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderizarCarrito();
 
   configurarFinalizarCompra();
-  inicializarEventosTarjeta();
-  procesarPagoFinal();
 
   const btnVaciar = document.querySelector("#btn-vaciar-carrito");
   if (btnVaciar) {
@@ -58,7 +56,7 @@ function cargarProductos() {
   
       col.innerHTML = `
         <div class="card h-100 product-card">
-          <img src="${producto.image}" class="card-img-top" style="height:200px; object-fit:contain;" />
+          <img src="${producto.image}" alt="${producto.title}" class="card-img-top" style="height:200px; object-fit:contain;" />
   
           <div class="card-body d-flex flex-column">
   
@@ -139,12 +137,16 @@ function openProductModal(producto) {
 
   const modal = document.createElement("div");
   modal.className = "product-modal";
+  modal.style.zIndex = "9999";
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("aria-labelledby", "modal-title-" + producto.id);
   modal.innerHTML = `
     <div class="product-modal-content">
-      <span class="product-close">&times;</span>
+      <span class="product-close" role="button" aria-label="Cerrar modal">&times;</span>
       
       <div class="modal-header-custom">
-        <h2 class="product-title-top">${producto.title}</h2>
+        <h2 class="product-title-top" id="modal-title-${producto.id}">${producto.title}</h2>
         <hr class="title-divider">
       </div>
 
@@ -193,6 +195,8 @@ function openProductModal(producto) {
   `;
 
   document.body.appendChild(modal);
+  modal.style.display = "flex";
+  setTimeout(() => modal.classList.add("active"), 10);
 
   modal.querySelector(".product-close").addEventListener("click", () => {
     modal.remove();
@@ -200,6 +204,10 @@ function openProductModal(producto) {
 
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.remove();
+  });
+
+  modal.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") modal.remove();
   });
 
   let cantidad = 1;
@@ -463,120 +471,33 @@ function vaciarCarrito() {
   });
 }
 
-// Modal de Pago
+// Finalizar Compra
 function configurarFinalizarCompra() {
     const btnFinalizar = document.querySelector(".btn-dark");
-    const modalPago = document.getElementById("checkout-modal");
-    const btnCerrar = document.getElementById("close-checkout");
 
     if (btnFinalizar) {
         btnFinalizar.onclick = () => {
             const offcanvasElement = document.getElementById('cartOffcanvas');
-            const instance = bootstrap.Offcanvas.getInstance(offcanvasElement);
-            if (instance) instance.hide();
-            modalPago.style.display = "flex";
-            setTimeout(() => modalPago.classList.add("active"), 10);
-        };
-    }
-    if (btnCerrar) {
-        btnCerrar.onclick = () => {
-            modalPago.classList.remove("active");
-            setTimeout(() => modalPago.style.display = "none", 300);
-        };
-    }
-}
+            const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+            if (offcanvas) {
+                offcanvas.hide();
+            }
 
-// Animación TC
-function inicializarEventosTarjeta() {
-    const cardVisual = document.getElementById('card');
-    const form = document.getElementById('payment-form');
-    const inputs = {
-        'card-number': 'display-card-number',
-        'card-holder': 'display-card-holder',
-        'card-expiry': 'display-card-expiry',
-        'card-cvv': 'display-card-cvv'
-    };
-
-    Object.keys(inputs).forEach(id => {
-        const inputEl = document.getElementById(id);
-        const displayEl = document.getElementById(inputs[id]);
-
-        inputEl?.addEventListener('input', (e) => {
-            let value = e.target.value;
-            if (id === 'card-holder') value = value.toUpperCase();
-            if (id === 'card-cvv') value = value.replace(/./g, '•');
-
-            displayEl.textContent = value || displayEl.dataset.placeholder || '';
-        });
-    });
-
-    // Efecto de giro para el CVV
-    const cvvInput = document.getElementById('card-cvv');
-    cvvInput?.addEventListener('focus', () => cardVisual.classList.add('flipped'));
-    cvvInput?.addEventListener('blur', () => cardVisual.classList.remove('flipped'));
-}
-
-// procesamiento de pago y limpieza del carrito
-function procesarPagoFinal() {
-    const paymentForm = document.getElementById('payment-form');
-    if (!paymentForm) return;
-
-    paymentForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const nroTarjeta = document.getElementById('card-number').value.trim();
-        const titular = document.getElementById('card-holder').value.trim();
-        const vencimiento = document.getElementById('card-expiry').value.trim();
-        const cvv = document.getElementById('card-cvv').value.trim();
-
-        if (!nroTarjeta || !titular || !vencimiento || !cvv) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Datos incompletos',
-                text: 'Por favor, completá todos los campos de la tarjeta.',
-                confirmButtonColor: '#d33'
-            });
-            return;
-        }
-
-        const modalPago = document.getElementById("checkout-modal");
-        modalPago.classList.remove("active");
-        
-        // Simulación de procesamiento de pago con delay
-        setTimeout(() => {
-            modalPago.style.display = "none";
+            localStorage.removeItem("carrito");
+            actualizarBadge();
+            renderizarCarrito();
 
             Swal.fire({
-                title: 'Procesando Pago',
-                text: 'Verificando con la entidad bancaria...',
-                allowOutsideClick: false,
+                position: "top-end",
+                icon: "success",
+                title: "Compra finalizada",
+                text: "Tu pedido ha sido procesado exitosamente.",
                 showConfirmButton: false,
-                willOpen: () => { Swal.showLoading(); }
+                timer: 4000,
+                toast: true,
+                background: "#d4edda",
+                color: "#155724"
             });
-
-            setTimeout(() => {
-                localStorage.removeItem("carrito");
-                actualizarBadge();
-                renderizarCarrito();
-                paymentForm.reset();
-
-                document.getElementById('display-card-number').textContent = '•••• •••• •••• ••••';
-                document.getElementById('display-card-holder').textContent = 'NOMBRE COMPLETO';
-                document.getElementById('display-card-expiry').textContent = 'MM/AA';
-                document.getElementById('display-card-cvv').textContent = '';
-
-                Swal.fire({
-                    position: "top-start",
-                    icon: "success",
-                    title: "¡Compra Exitosa!",
-                    text: "El pago se acreditó correctamente.",
-                    toast: true,
-                    showConfirmButton: false,
-                    timer: 4000,
-                    background: "#d4edda",
-                    color: "#155724"
-                });
-            }, 2000);
-        }, 300);
-    });
+        };
+    }
 }

@@ -13,6 +13,11 @@
     box-sizing: border-box;
 }
 
+*:focus-visible {
+    outline: 3px solid #115d96;
+    outline-offset: 2px;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: var(--bs-body-bg);
@@ -155,7 +160,7 @@ body {
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(6px);
-    z-index: 2000;
+    z-index: 9999;
     opacity: 0;
 }
 
@@ -173,6 +178,110 @@ body {
     border: 1px solid var(--bs-border-color);
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     transform: scale(0.9);
+    max-width: 600px;
+    width: 90%;
+}
+
+.product-modal-body-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.product-image-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bs-tertiary-bg);
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.product-image-box img {
+    height: 220px;
+    object-fit: contain;
+    width: 100%;
+}
+
+.product-details-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.product-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--bs-secondary-color);
+}
+
+.price-qty-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.price-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-label {
+    font-size: 0.8rem;
+    color: var(--bs-secondary-color);
+}
+
+.price-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #115d96;
+}
+
+.qty-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.qty-box label {
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.product-modal-btn {
+    width: 100%;
+    padding: 12px;
+    background: #115d96;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.product-modal-btn:hover {
+    background: #0b3d63;
+}
+
+.modal-header-custom {
+    margin-bottom: 15px;
+}
+
+.product-title-top {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--bs-body-color);
+    margin-bottom: 5px;
+}
+
+.title-divider {
+    margin: 8px 0 0 0;
+    border: 0;
+    border-top: 1px solid var(--bs-border-color);
 }
 
 .product-modal.active .product-modal-content {
@@ -187,168 +296,6 @@ body {
     cursor: pointer;
     color: var(--bs-secondary-color);
     z-index: 100;
-}
-
-/* =========================================
-   MODAL DE PAGO (SOLUCIÓN A LA IMAGEN)
-   ========================================= */
-
-#checkout-modal .product-modal-content {
-    width: 450px;
-    padding: 25px;
-    overflow: visible; /* Permitir que la tarjeta "flote" */
-}
-
-/* Forzamos que la tarjeta visual se vea */
-#checkout-modal .card-wrapper {
-    position: relative;
-    width: 100%;
-    height: 210px;
-    perspective: 1000px;
-    margin-bottom: 20px;
-    z-index: 10;
-}
-
-/* Estilos exclusivos para la tarjeta de pago, evitando conflicto con cards de productos */
-#checkout-modal .card {
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-#checkout-modal .card.flipped {
-    transform: rotateY(180deg);
-}
-
-#checkout-modal .card-front,
-#checkout-modal .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 15px;
-    padding: 25px;
-    color: white !important;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
-}
-
-#checkout-modal .card-front {
-    background: linear-gradient(135deg, #115d96 0%, #1f5f97 100%) !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-#checkout-modal .card-back {
-    background: linear-gradient(135deg, #2c3e50 0%, #000000 100%) !important;
-    transform: rotateY(180deg);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0;
-}
-
-/* Elementos internos de la tarjeta */
-#checkout-modal .card-bank-name {
-    font-size: 0.85rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-#checkout-modal .card-number {
-    font-size: 1.45rem;
-    letter-spacing: 3px;
-    text-align: center;
-    font-family: 'Courier New', monospace;
-    margin: 20px 0;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
-
-#checkout-modal .label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    opacity: 0.8;
-    margin-bottom: 2px;
-}
-
-#checkout-modal .value {
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 1px;
-}
-
-#checkout-modal .card-magnetic-strip {
-    width: 100%;
-    height: 45px;
-    background: #111;
-    margin-bottom: 25px;
-}
-
-#checkout-modal .card-cvv {
-    background: #fff;
-    color: #333;
-    width: 80%;
-    height: 38px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 15px;
-    border-radius: 4px;
-}
-
-/* FORMULARIO DE PAGO */
-#checkout-modal .card-form {
-    background: var(--bs-body-bg);
-    padding: 90px 20px 20px 20px;
-    margin-top: -85px; 
-    border-radius: 12px;
-    border: 1px solid var(--bs-border-color);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-#checkout-modal .form-group label {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: var(--bs-secondary-color);
-    margin-bottom: 6px;
-}
-
-#checkout-modal .form-group input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--bs-border-color);
-    background: var(--bs-tertiary-bg);
-    color: var(--bs-body-color);
-    font-size: 0.95rem;
-}
-
-#checkout-modal .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-#checkout-modal #btn-confirmar-pago {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #115d96, #0b3d63);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 4px 10px rgba(17, 93, 150, 0.3);
 }
 
 /* =========================================
@@ -368,6 +315,41 @@ body {
    ========================================= */
 @media (max-width: 768px) {
     .products-section { padding: 20px; }
-    #checkout-modal .product-modal-content { width: 95%; padding: 15px; }
-    #checkout-modal .card-number { font-size: 1.2rem; }
+}
+@media (max-width: 480px) {
+    .product-modal-content {
+        max-width: 95%;
+        max-height: 85vh;
+        width: 95%;
+        padding: 15px;
+        overflow-y: auto;
+    }
+
+    .product-image-box {
+        padding: 10px;
+    }
+
+    .product-image-box img {
+        height: 180px;
+    }
+
+    .product-description {
+        font-size: 0.9rem;
+    }
+
+    .price-qty-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .price-value {
+        font-size: 1.3rem;
+    }
+
+    .qty-box {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
