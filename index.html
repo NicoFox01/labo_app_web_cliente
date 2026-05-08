@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="es" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,22 +23,22 @@
         </div>
 
         <div class="login-container">
-            <img src="images/istea_logo.png" id="logo">
+            <img src="images/istea_logo.png" id="logo" alt="Logo de ISTEA">
             <form>
                 <label for="username"> Username:</label>
-                <input type="text" id="username" name="username" placeholder="Nombre de Usuario">
+                <input type="text" id="username" name="username" placeholder="Nombre de Usuario" aria-required="true">
                 <label for="password"> Password:</label>
-                <input type="password" id="password" name="password" placeholder="Contraseña">
-                <p id="login-error" class="login-error"></p>
+                <input type="password" id="password" name="password" placeholder="Contraseña" aria-required="true">
+                <p id="login-error" class="login-error" aria-live="polite"></p>
                 <button type="submit" class="login-btn">Login</button>
             </form>
-            <button class="qa-btn" onclick="openModal()">Q&A</button>
+            <button class="qa-btn" onclick="openModal()" aria-label="Abrir preguntas frecuentes">Q&A</button>
         </div>
 
-        <div id="modal" class="modal">
+        <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h3>¿Cómo iniciar sesión?</h3>
+                <span class="close" role="button" aria-label="Cerrar" onclick="closeModal()">&times;</span>
+                <h3 id="modal-title">¿Cómo iniciar sesión?</h3>
                 <p>Para iniciar sesión, se comparten las siguientes credenciales debido a que las de Fake Store API no funcionan.</p>
                 <br>
                 <p>Usuario: mor_2314</p>
