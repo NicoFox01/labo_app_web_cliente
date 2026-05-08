@@ -48,8 +48,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("click", (event) => {
   const modal = document.getElementById("modal");
-  // Comprobamos si el clic fue exactamente en el contenedor principal del modal
   if (event.target === modal) {
+    closeModal();
+  }
+});
+
+window.addEventListener("keydown", (event) => {
+  const modal = document.getElementById("modal");
+  if (event.key === "Escape" && modal.style.display === "flex") {
     closeModal();
   }
 });

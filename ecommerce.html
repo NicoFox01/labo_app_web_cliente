@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/styles/ecommerce.css" />
   </head>
   <body>
-    <header class="topbar">
+    <header class="topbar" role="banner">
       <div class="container-fluid px-4 px-md-5">
         <div
           class="topbar-content d-flex align-items-center justify-content-between"
@@ -29,14 +29,16 @@
             />
           </div>
 
-          <div class="search-wrapper">
+          <div class="search-wrapper" role="search">
+            <label for="buscador" class="visually-hidden">Buscar Productos</label>
             <input
               type="text"
               id="buscador"
               class="search-input"
               placeholder="Buscar Productos..."
+              aria-label="Buscar Productos"
             />
-            <button class="search-btn">
+            <button class="search-btn" aria-label="Buscar">
               <i class="bi bi-search"></i>
             </button>
           </div>
@@ -45,6 +47,7 @@
               type="button"
               class="btn btn-outline-secondary theme-toggle"
               onclick="toggleTheme()"
+              aria-label="Cambiar modo oscuro"
             >
               <i class="bi bi-moon-fill"></i>
             </button>
@@ -54,144 +57,38 @@
               data-bs-toggle="offcanvas"
               data-bs-target="#cartOffcanvas"
               aria-controls="cartOffcanvas"
+              aria-label="Abrir carrito de compras"
             >
-              <i class="bi bi-cart3 cart-icon"></i>
-              <span class="cart-badge"></span>
+              <i class="bi bi-cart3 cart-icon" aria-hidden="true"></i>
+              <span class="cart-badge" aria-hidden="true"></span>
             </button>
           </div>
         </div>
       </div>
     </header>
 
-    <main class="products-section">
+    <main class="products-section" role="main" aria-label="Catálogo de productos">
       <div
         class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
         id="listado-productos"
       ></div>
     </main>
 
-    <footer class="footer">© 2026 ISTEA E-Commerce.</footer>
+    <footer class="footer" role="contentinfo">© 2026 ISTEA E-Commerce.</footer>
     <!--Carrito con productos-->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="offcanvasRightLabel">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasRightLabel">
           Carrito de Compras
         </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar carrito"></button>
       </div>
       <div class="offcanvas-body" id="cart-aside">
         <!--productos del carrito generado con JS-->
       </div>
-      <div
-        class="offcanvas-footer d-flex justify-content-center align-items-center gap-3 py-3"
-      >
-        <button id="btn-vaciar-carrito" class="btn btn-close-white">
-          Vaciar Carrito
-        </button>
+      <div class="offcanvas-footer d-flex justify-content-center align-items-center gap-3 py-3">
+        <button id="btn-vaciar-carrito" class="btn btn-close-white">Vaciar Carrito</button>
         <button class="btn btn-dark">Finalizar Compra</button>
-      </div>
-    </div>
-    <!-- Modal de Pago (Tarjeta) -->
-    <div id="checkout-modal" class="product-modal" style="display: none">
-      <div
-        class="product-modal-content"
-        style="width: 450px; padding: 20px; overflow: hidden"
-      >
-        <span class="product-close" id="close-checkout">&times;</span>
-        <div class="payment-container">
-          <!-- Tarjeta Visual -->
-          <div class="card-wrapper">
-            <div class="card" id="card">
-              <div class="card-front">
-                <div class="card-info-container">
-                  <div class="card-info-type">
-                    <p id="card-bank-name">Ingrese su tarjeta</p>
-                    <div class="card-type-container">
-                      <div class="card-type" id="card-type"></div>
-                    </div>
-                  </div>
-                  <div class="card-info-user">
-                    <div class="card-info-user-container">
-                      <div class="card-details">
-                        <div class="card-holder">
-                          <span class="label">Titular</span>
-                          <span class="value" id="display-card-holder"
-                            >NOMBRE COMPLETO</span
-                          >
-                        </div>
-                        <div class="card-expiry">
-                          <span class="label">Vencimiento</span>
-                          <span class="value" id="display-card-expiry"
-                            >MM/AA</span
-                          >
-                        </div>
-                      </div>
-                      <div class="card-number" id="display-card-number">
-                        •••• •••• •••• ••••
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-back">
-                <div class="card-magnetic-strip"></div>
-                <div class="card-cvv">
-                  <span class="label">CVV</span>
-                  <span class="value" id="display-card-cvv"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Formulario -->
-          <form class="card-form" id="payment-form" autocomplete="off">
-            <div class="form-group">
-              <label>Número de tarjeta</label>
-              <input
-                type="text"
-                id="card-number"
-                placeholder="1234 5678 9012 3456"
-                maxlength="19"
-              />
-            </div>
-            <div class="form-group">
-              <label>Titular de la tarjeta</label>
-              <input
-                type="text"
-                id="card-holder"
-                placeholder="Nombre como figura en la tarjeta"
-              />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Vencimiento</label>
-                <input
-                  type="text"
-                  id="card-expiry"
-                  placeholder="MM/AA"
-                  maxlength="5"
-                />
-              </div>
-              <div class="form-group">
-                <label>CVV</label>
-                <input
-                  type="text"
-                  id="card-cvv"
-                  placeholder="•••"
-                  maxlength="3"
-                />
-              </div>
-            </div>
-            <button type="submit" id="btn-confirmar-pago">
-              Confirmar Pago
-            </button>
-          </form>
-        </div>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
